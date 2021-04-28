@@ -1,0 +1,34 @@
+version: '3'
+services:
+
+  database:
+    image: "postgres:latest"
+    ports:
+      - "${PORT_DB}:5432"
+    environment:
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    networks:
+      - api-network
+    restart: always
+
+  api:
+    build: .
+    env_file:
+      - .env
+    ports:
+      - "${PORT_API}:${PORT_API}"
+    depends_on:
+      - database
+    networks:
+      - api-network
+    restart: always
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    command: yarn dev
+
+networks:
+  api-network:
+    driver: bridge
