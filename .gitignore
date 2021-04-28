@@ -7,7 +7,7 @@ temp/
 coverage
 ormconfig.json
 dist
-.lock/
+.lock
 
 uploads/*
 !uploads/.gitkeep
