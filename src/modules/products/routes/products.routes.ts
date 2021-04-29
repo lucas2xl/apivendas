@@ -5,20 +5,31 @@ import { celebrate, Joi, Segments } from 'celebrate';
 const productsRouter = Router();
 const productsController = new ProductsController();
 
+const validateParams = celebrate({
+  [Segments.PARAMS]: { id: Joi.string().uuid().required() },
+});
+
+const validateBody = celebrate({
+  [Segments.BODY]: {
+    name: Joi.string().required(),
+    price: Joi.number().precision(2).required(),
+    quantity: Joi.number().required(),
+  },
+});
+
 productsRouter.get('/', productsController.index);
 
-productsRouter.get(
+productsRouter.get('/:id', validateParams, productsController.show);
+
+productsRouter.post('/', validateBody, productsController.create);
+
+productsRouter.put(
   '/:id',
-  celebrate({
-    [Segments.PARAMS]: { id: Joi.string().uuid().required() },
-  }),
-  productsController.show,
+  validateParams,
+  validateBody,
+  productsController.update,
 );
 
-productsRouter.post('/', productsController.create);
-
-productsRouter.put('/:id', productsController.update);
-
-productsRouter.delete('/:id', productsController.delete);
+productsRouter.delete('/:id', validateParams, productsController.delete);
 
 export default productsRouter;
