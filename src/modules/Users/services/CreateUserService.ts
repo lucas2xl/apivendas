@@ -1,35 +1,41 @@
-import AppError from '@shared/errors/AppError';
 import { getCustomRepository } from 'typeorm';
-import { hash } from 'bcryptjs';
+import path from 'path';
+import fs from 'fs';
+import AppError from '@shared/errors/AppError';
+import uploadConfig from '@config/upload';
 import User from '../typeorm/entities/User';
 import UserRepository from '../typeorm/repositories/UserRepository';
 
 interface IRequest {
-  name: string;
-  email: string;
-  password: string;
+  user_id: string;
+  avatarFileName: string;
 }
-class CreateUserService {
-  public async execute({ name, email, password }: IRequest): Promise<User> {
+
+class UpdateUserAvatarService {
+  public async execute({ user_id, avatarFileName }: IRequest): Promise<User> {
     const userRepository = getCustomRepository(UserRepository);
 
-    const emailExist = await userRepository.findByEmail(email);
+    const user = await userRepository.findById(user_id);
 
-    if (emailExist) {
-      throw new AppError('Email address already used.');
+    if (!user) {
+      throw new AppError('User not found.');
     }
 
-    const hashedPassword = await hash(password, 8);
+    if (user.avatar) {
+      const userAvatarFilePath = path.join(uploadConfig.directory, user.avatar);
+      const userAvatarFIleExists = await fs.promises.stat(userAvatarFilePath);
 
-    const user = userRepository.create({
-      name,
-      email,
-      password: hashedPassword,
-    });
+      if (userAvatarFIleExists) {
+        await fs.promises.unlink(userAvatarFilePath);
+      }
+    }
+
+    user.avatar = avatarFileName;
 
     await userRepository.save(user);
+
     return user;
   }
 }
 
-export default CreateUserService;
+export default UpdateUserAvatarService;

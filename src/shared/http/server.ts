@@ -1,16 +1,18 @@
 import 'reflect-metadata';
 import '@shared/typeorm';
 import 'express-async-errors';
+import AppError from '@shared/errors/AppError';
+import uploadConfig from '@config/upload';
 import express, { NextFunction, Request, Response } from 'express';
+import { errors } from 'celebrate';
 import cors from 'cors';
 import routes from './routes';
-import AppError from '@shared/errors/AppError';
-import { errors } from 'celebrate';
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use('/files', express.static(uploadConfig.directory));
 
 app.use(routes);
 
@@ -23,7 +25,7 @@ app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
       message: error.message,
     });
   }
-  console.log(error)
+  console.log(error);
   return res.status(500).json({
     status: 'error',
     message: 'Internal server error',

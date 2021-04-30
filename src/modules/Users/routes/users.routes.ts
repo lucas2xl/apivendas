@@ -1,10 +1,16 @@
 import { Router } from 'express';
-import UsersController from '../controllers/UsersController';
 import { celebrate, Joi, Segments } from 'celebrate';
+import multer from 'multer';
+import uploadConfig from '@config/upload';
 import isAuthenticate from '@shared/http/middlewares/isAuthenticate';
+import UsersController from '../controllers/UsersController';
+import UsersAvatarController from '../controllers/UsersAvatarController';
 
 const usersRouter = Router();
 const usersController = new UsersController();
+const usersAvatarController = new UsersAvatarController();
+
+const upload = multer(uploadConfig);
 
 const validateParams = celebrate({
   [Segments.PARAMS]: { id: Joi.string().uuid().required() },
@@ -32,5 +38,13 @@ usersRouter.post('/', validateBody, usersController.create);
 // );
 
 // usersRouter.delete('/:id', validateParams, usersController.delete);
+
+// Upload Avatar
+usersRouter.patch(
+  '/avatar',
+  isAuthenticate,
+  upload.single('avatar'),
+  usersAvatarController.update,
+);
 
 export default usersRouter;
