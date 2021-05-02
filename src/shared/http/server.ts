@@ -6,11 +6,14 @@ import uploadConfig from '@config/upload';
 import express, { NextFunction, Request, Response } from 'express';
 import { errors } from 'celebrate';
 import cors from 'cors';
+import allowCors from '@config/cors';
 import routes from './routes';
 
 const app = express();
 
 app.use(cors());
+app.use(allowCors);
+
 app.use(express.json());
 app.use('/files', express.static(uploadConfig.directory));
 
@@ -25,13 +28,13 @@ app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
       message: error.message,
     });
   }
-  console.log(error);
+  res.json(error)
   return res.status(500).json({
     status: 'error',
     message: 'Internal server error',
   });
 });
 
-app.listen(3333, () => {
-  console.log('🚀 Server started on port 3333! 🚀');
+app.listen(process.env.PORT_API, () => {
+console.log(`🚀 Server started on port ${process.env.PORT_API}! 🚀`);
 });

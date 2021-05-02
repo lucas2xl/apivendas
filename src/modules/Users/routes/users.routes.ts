@@ -18,7 +18,7 @@ const validateParams = celebrate({
 
 const validateBody = celebrate({
   [Segments.BODY]: {
-    name: Joi.string().required(),
+    name: Joi.string(),
     email: Joi.string().email().required(),
     password: Joi.string().required(),
   },
