@@ -1,4 +1,7 @@
+import env from 'dotenv';
 import { ConnectionOptions } from 'typeorm';
+
+env.config();
 
 export default {
   type: 'postgres',
