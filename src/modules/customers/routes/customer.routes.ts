@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { celebrate, Joi, Segments } from 'celebrate';
 import CustomerController from '../controllers/CustomerController';
+import isAuthenticate from '@shared/http/middlewares/isAuthenticate';
 
 const CustomersRouter = Router();
 const customersController = new CustomerController();
@@ -15,6 +16,8 @@ const validateBody = celebrate({
     email: Joi.string().email().required(),
   },
 });
+
+CustomersRouter.use(isAuthenticate);
 
 CustomersRouter.get('/', customersController.index);
 

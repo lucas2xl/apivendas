@@ -16,7 +16,7 @@ class DeleteCustomerService {
       throw new AppError('User not found.');
     }
 
-    await customersRepository.recover(customer);
+    await customersRepository.remove(customer);
   }
 }
 
