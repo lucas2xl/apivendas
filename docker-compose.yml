@@ -13,14 +13,32 @@ services:
       - api-network
     restart: always
 
+  redis:
+    image: "redis:alpine"
+    ports:
+      - "${REDIS_PORT}:6379"
+    command: [ "redis-server", "--bind", "redis", "--port", "${REDIS_PORT}" ]
+    networks:
+      - api-network
+    restart: always
+
+  redisinsight:
+    image: redislabs/redisinsight:latest
+    ports:
+      - "${REDIS_CLIENT_PORT}:8001"
+    networks:
+      - api-network
+    restart: always
+
   api:
     build: .
     env_file:
       - .env
     ports:
-      - "${PORT_API}:${PORT_API}"
+      - "${APP_API_PORT}:${APP_API_PORT}"
     depends_on:
       - database
+      - redis
     networks:
       - api-network
     restart: always

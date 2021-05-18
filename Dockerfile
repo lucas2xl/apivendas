@@ -8,6 +8,6 @@ RUN yarn install
 
 COPY . .
 
-EXPOSE ${PORT_API}
+EXPOSE ${APP_API_PORT}
 
 CMD ["yarn", "dev"]

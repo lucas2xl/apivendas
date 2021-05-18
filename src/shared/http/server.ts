@@ -1,12 +1,14 @@
 import 'reflect-metadata';
-import '@shared/typeorm';
 import 'express-async-errors';
-import AppError from '@shared/errors/AppError';
-import uploadConfig from '@config/upload';
 import express, { NextFunction, Request, Response } from 'express';
 import { errors } from 'celebrate';
+import { pagination } from 'typeorm-pagination';
 import cors from 'cors';
+import '@shared/typeorm';
+import AppError from '@shared/errors/AppError';
+import uploadConfig from '@config/upload';
 import allowCors from '@config/cors';
+import rateLimiter from "@shared/http/middlewares/rateLimiter";
 import routes from './routes';
 
 const app = express();
@@ -15,6 +17,10 @@ app.use(cors());
 app.use(allowCors);
 
 app.use(express.json());
+app.use(rateLimiter);
+
+app.use(pagination);
+
 app.use('/files', express.static(uploadConfig.directory));
 
 app.use(routes);
@@ -35,6 +41,6 @@ app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
   });
 });
 
-app.listen(process.env.PORT_API, () => {
-console.log(`🚀 Server started on port ${process.env.PORT_API}! 🚀`);
+app.listen(process.env.APP_API_PORT, () => {
+console.log(`🚀 Server started on port ${process.env.APP_API_PORT}! 🚀`);
 });

@@ -2,6 +2,7 @@ import AppError from '@shared/errors/AppError';
 import { getCustomRepository } from 'typeorm';
 import Product from '../typeorm/entities/Product';
 import ProductRepository from '../typeorm/repositories/ProductRepository';
+import RedisCache from '@shared/cache/RedisCache';
 
 interface IRequest {
   id: string;
@@ -18,6 +19,7 @@ class UpdateProductService {
     quantity,
   }: IRequest): Promise<Product> {
     const productRepository = getCustomRepository(ProductRepository);
+    const redisCache = new RedisCache();
 
     const product = await productRepository.findOne(id);
 
@@ -34,6 +36,8 @@ class UpdateProductService {
     product.name = name;
     product.price = price;
     product.quantity = quantity;
+
+    await redisCache.invalidate(String(process.env.PRODUCT_KEY_CACHE));
 
     await productRepository.save(product);
 

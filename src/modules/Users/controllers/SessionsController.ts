@@ -1,5 +1,6 @@
 import { Response, Request } from 'express';
 import CreateSessionsService from '../services/CreateSessionsService';
+import { classToClass } from 'class-transformer';
 
 interface IRequest {
   email: string;
@@ -14,7 +15,7 @@ class SessionsController {
 
     const user = await createSession.execute({ email, password });
 
-    return res.json(user);
+    return res.json(classToClass(user));
   }
 }
 
