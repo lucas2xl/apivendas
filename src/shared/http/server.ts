@@ -8,7 +8,7 @@ import '@shared/typeorm';
 import AppError from '@shared/errors/AppError';
 import uploadConfig from '@config/upload';
 import allowCors from '@config/cors';
-import rateLimiter from "@shared/http/middlewares/rateLimiter";
+import rateLimiter from '@shared/http/middlewares/rateLimiter';
 import routes from './routes';
 
 const app = express();
@@ -34,7 +34,8 @@ app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
       message: error.message,
     });
   }
-  res.json(error)
+  console.log(error);
+  res.json(error);
   return res.status(500).json({
     status: 'error',
     message: 'Internal server error',
@@ -42,5 +43,5 @@ app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
 });
 
 app.listen(process.env.APP_API_PORT, () => {
-console.log(`🚀 Server started on port ${process.env.APP_API_PORT}! 🚀`);
+  console.log(`🚀 Server started on port ${process.env.APP_API_PORT}! 🚀`);
 });

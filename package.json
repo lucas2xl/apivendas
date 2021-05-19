@@ -7,9 +7,17 @@
     "dev": "ts-node-dev -r tsconfig-paths/register --inspect --transpile-only --ignore-watch node_modules src/shared/http/server.ts",
     "lint": "eslint . --ext .ts",
     "lint-fix": "eslint . --ext .ts --fix",
-    "typeorm": "ts-node-dev -r tsconfig-paths/register ./node_modules/typeorm/cli.js"
+    "typeorm": "ts-node-dev -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
+    "build": "babel src --extensions \".js,.ts\" --out-dir dist --copy-files"
   },
   "devDependencies": {
+    "@babel/cli": "^7.14.3",
+    "@babel/core": "^7.14.3",
+    "@babel/node": "^7.14.2",
+    "@babel/plugin-proposal-class-properties": "^7.13.0",
+    "@babel/plugin-proposal-decorators": "^7.14.2",
+    "@babel/preset-env": "^7.14.2",
+    "@babel/preset-typescript": "^7.13.0",
     "@types/bcryptjs": "^2.4.2",
     "@types/cors": "^2.8.10",
     "@types/dotenv": "^8.2.0",
@@ -22,6 +30,8 @@
     "@types/redis": "^2.8.28",
     "@typescript-eslint/eslint-plugin": "^4.22.0",
     "@typescript-eslint/parser": "^4.22.0",
+    "babel-plugin-module-resolver": "^4.1.0",
+    "babel-plugin-transform-typescript-metadata": "^0.3.2",
     "eslint": "^7.25.0",
     "eslint-config-prettier": "6.15.0",
     "eslint-plugin-prettier": "3.2.0",
@@ -32,6 +42,7 @@
     "typescript": "^4.2.4"
   },
   "dependencies": {
+    "aws-sdk": "^2.909.0",
     "bcryptjs": "^2.4.3",
     "celebrate": "^14.0.0",
     "class-transformer": "^0.4.0",
@@ -43,6 +54,7 @@
     "handlebars": "^4.7.7",
     "ioredis": "^4.27.2",
     "jsonwebtoken": "^8.5.1",
+    "mime": "^2.5.2",
     "multer": "^1.4.2",
     "nodemailer": "^6.6.0",
     "pg": "^8.6.0",

@@ -10,7 +10,7 @@ const usersRouter = Router();
 const usersController = new UsersController();
 const usersAvatarController = new UsersAvatarController();
 
-const upload = multer(uploadConfig);
+const upload = multer(uploadConfig.multer);
 
 const validateParams = celebrate({
   [Segments.PARAMS]: { id: Joi.string().uuid().required() },
